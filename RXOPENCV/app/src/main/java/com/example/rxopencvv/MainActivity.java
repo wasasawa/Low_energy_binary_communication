@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,8 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.Collections;
 import java.util.List;
+
+
 
 public class MainActivity extends CameraActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
@@ -173,11 +176,15 @@ public class MainActivity extends CameraActivity implements CameraBridgeViewBase
                 Imgproc.putText(rgbaFrame, "bin : " + binarySequence1, new Point(50, 500), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
         if (binarySequence1.length() >= 8) {
             decodedText = binaryDecoder.decodeBinary(binarySequence1.toString());
-            Imgproc.putText(rgbaFrame, "Decoded : " + decodedText, new Point(50, 700), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
-            //binarySequence1.setLength(0);
-        }
+            runOnUiThread(() -> {
+                        Toast.makeText(this, "Binary: " + binarySequence1 + "\nText: " + decodedText, Toast.LENGTH_SHORT).show();
+            });
+                        Imgproc.putText(rgbaFrame, "Decoded : " + decodedText, new Point(50, 700), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
+                        //binarySequence1.setLength(0);
+                    }
+
                 //Log.d(TAG, "Frame captured and processed");
         // Return the same frame or modify it
         return rgbaFrame;
     }
-}
+    }
