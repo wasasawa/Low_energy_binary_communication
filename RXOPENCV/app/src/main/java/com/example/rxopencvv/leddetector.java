@@ -24,6 +24,7 @@ public class leddetector {
      * @param centerX The expected X-coordinate of the LED in the frame.
      * @param centerY The expected Y-coordinate of the LED in the frame.
      * @return The binary sequence as a String, or null if no LED is detected.
+     * */
 
     public String detectLED(Mat frame, int centerX, int centerY) {
         // Define the ROI (Region of Interest)
@@ -67,7 +68,6 @@ public class leddetector {
 
         return binarySequence.length() >= 8 ? binarySequence.toString() : null;
     }
-    */
 
     /**
      * Detects the LED's blinking pattern in the a frame and returns the binary sequence.
@@ -78,6 +78,7 @@ public class leddetector {
      * @return The binary sequence as a String, or null if no LED is detected.
      * */
 
+    /*
     public String detectLED(Mat frame, int tileSize, int stepSize) {
 
         boolean isLedDetected = false;
@@ -128,6 +129,9 @@ public class leddetector {
         // Return the binary sequence that encodes LED detection across the entire screen
         return binarySequence.toString();
     }
+
+    */
+
     /**
      * Checks if the LED is currently detected.
      *

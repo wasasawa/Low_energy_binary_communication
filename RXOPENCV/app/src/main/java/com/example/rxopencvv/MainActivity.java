@@ -132,7 +132,7 @@ public class MainActivity extends CameraActivity implements CameraBridgeViewBase
         Mat rgbaFrame = inputFrame.rgba();
 
         // Detect LED and decode its pattern
-        String binarySequence = ledDetector.detectLED(rgbaFrame, 100, 100);
+        String binarySequence = ledDetector.detectLED(rgbaFrame, rgbaFrame.cols()/2, rgbaFrame.rows()/2);
 
         if (ledDetector.isLedDetected()) {
             Log.d(TAG, "LED Detected");

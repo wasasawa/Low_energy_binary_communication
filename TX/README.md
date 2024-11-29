@@ -9,7 +9,7 @@ App was designed with visual studio code IDE using the flutter library ((dart la
 
 # Compiling
 
-Recommended method is to install Visual studio code or Android studio as it installs all the necessary dependencies, flutter has to be installed through the VScode or Android studio extension manager ((It can be done manually but might create version conflicts with graddle)), once flutter is installed and the rep cloned, connect the phone and run ``` flutter run ``` that will run the app on the phone (This has to be done only the first time, or when the code is changed) 
+Recommended method is to install Visual studio code or Android studio as it installs all the necessary dependencies, flutter has to be installed through the VScode or Android studio extension manager or better yet, manually, once flutter is installed and the rep cloned, connect the phone and run ``` flutter run ``` that will run the app on the phone (This has to be done only the first time, or when the code is changed) 
 
 # Using the app
 
