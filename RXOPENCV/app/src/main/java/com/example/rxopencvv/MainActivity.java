@@ -11,11 +11,14 @@ import org.opencv.android.CameraActivity;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends CameraActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class MainActivity extends CameraActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
     private static final String TAG = "OpenCV-APP";
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -24,6 +27,12 @@ public class MainActivity extends CameraActivity implements CameraBridgeViewBase
     // Add LEDDetector and BinaryDecoder instances
     private leddetector ledDetector;
     private binarydecoder binaryDecoder;
+
+    private static final int SAMPLING_INTERVAL_MS = 1000; // Sampling interval in milliseconds
+
+    private long lastSampleTime = 0;
+    private StringBuilder binarySequence1 = new StringBuilder();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +43,7 @@ public class MainActivity extends CameraActivity implements CameraBridgeViewBase
         mOpenCvCameraView = findViewById(R.id.camera_view); // Initialize global mOpenCvCameraView
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this); // Set listener for camera frames
+
 
         // Add mOpenCvCameraView to the list
         cameraViews = Collections.singletonList(mOpenCvCameraView);
@@ -133,21 +143,40 @@ public class MainActivity extends CameraActivity implements CameraBridgeViewBase
 
         // Detect LED and decode its pattern
         String binarySequence = ledDetector.detectLED(rgbaFrame, rgbaFrame.cols()/2, rgbaFrame.rows()/2);
+        String decodedText;
+
+        long currentTime = System.currentTimeMillis();
 
         if (ledDetector.isLedDetected()) {
-            Log.d(TAG, "LED Detected");
+            //Log.d(TAG, "LED Detected");
+            if (currentTime - lastSampleTime >= SAMPLING_INTERVAL_MS) {
+                lastSampleTime = currentTime;
 
-            if (binarySequence != null && binarySequence.length() >= 8) {
-                // Decode binary sequence to text
-                String decodedText = binaryDecoder.decodeBinary(binarySequence);
-                Log.d(TAG, "Decoded Text: " + decodedText);
+                // Append binary data based on brightness
+                binarySequence1.append("1");
+            }
 
-                // Clear binary sequence for the next detection
-                ledDetector.clearBinarySequence();
+        } else {
+            if (currentTime - lastSampleTime >= SAMPLING_INTERVAL_MS) {
+                lastSampleTime = currentTime;
+
+                // Append binary data based on brightness
+                binarySequence1.append("0");
             }
         }
 
-        Log.d(TAG, "Frame captured and processed");
+            //if (binarySequence != null && binarySequence.length() >= 8) {
+                if (binarySequence1 != null) {
+                    // Decode binary sequence to text
+                    //Log.d(TAG, "Decoded Text: " + decodedText);                    // Clear binary sequence for the next detection
+                }
+                Imgproc.putText(rgbaFrame, "bin : " + binarySequence1, new Point(50, 500), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
+        if (binarySequence1.length() >= 8) {
+            decodedText = binaryDecoder.decodeBinary(binarySequence1.toString());
+            Imgproc.putText(rgbaFrame, "Decoded : " + decodedText, new Point(50, 700), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
+            binarySequence1.setLength(0);
+        }
+                //Log.d(TAG, "Frame captured and processed");
         // Return the same frame or modify it
         return rgbaFrame;
     }

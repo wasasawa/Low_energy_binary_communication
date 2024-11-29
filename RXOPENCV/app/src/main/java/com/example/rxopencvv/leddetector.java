@@ -11,7 +11,7 @@ public class leddetector {
 
     private static final int BRIGHTNESS_THRESHOLD = 200; // Adjust based on environment
     private static final int ROI_SIZE = 100; // Size of the region of interest (ROI)
-    private static final int SAMPLING_INTERVAL_MS = 100; // Sampling interval in milliseconds
+    private static final int SAMPLING_INTERVAL_MS = 1000; // Sampling interval in milliseconds
 
     private long lastSampleTime = 0;
     private StringBuilder binarySequence = new StringBuilder();
@@ -46,6 +46,7 @@ public class leddetector {
         // Draw the ROI on the frame for visualization
         Imgproc.rectangle(frame, roi.tl(), roi.br(), new Scalar(0, 255, 0), 2);
 
+
         // Detect if brightness exceeds the threshold
         if (brightness > BRIGHTNESS_THRESHOLD) {
             isLedDetected = true;
@@ -53,21 +54,16 @@ public class leddetector {
             // Log LED detection for debugging
             Imgproc.putText(frame, "LED Detected", new Point(50, 50), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
 
-            // Sample brightness at intervals to detect blinking
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastSampleTime >= SAMPLING_INTERVAL_MS) {
-                lastSampleTime = currentTime;
 
-                // Append binary data based on brightness
-                binarySequence.append("1");
-            }
         } else {
             isLedDetected = false;
-            binarySequence.append("0");
         }
 
         return binarySequence.length() >= 8 ? binarySequence.toString() : null;
     }
+
+
+
 
     /**
      * Detects the LED's blinking pattern in the a frame and returns the binary sequence.
