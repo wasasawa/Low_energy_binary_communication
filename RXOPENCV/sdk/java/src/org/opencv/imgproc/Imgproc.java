@@ -17,10 +17,6 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.core.TermCriteria;
-import org.opencv.imgproc.CLAHE;
-import org.opencv.imgproc.GeneralizedHoughBallard;
-import org.opencv.imgproc.GeneralizedHoughGuil;
-import org.opencv.imgproc.LineSegmentDetector;
 import org.opencv.utils.Converters;
 
 // C++: class Imgproc
@@ -7732,7 +7728,7 @@ public class Imgproc {
      * @param closed Flag indicating whether the curve is closed or not.
      * @return automatically generated
      */
-    public static double arcLength(MatOfPoint2f curve, boolean closed) {
+    public static double arcLength(MatOfPoint curve, boolean closed) {
         Mat curve_mat = curve;
         return arcLength_0(curve_mat.nativeObj, closed);
     }

@@ -303,12 +303,12 @@ void transmit(String codedText) async
         if (char == '0') {
           TorchLight.disableTorch();
           isTorchOn = false;
-          await Future.delayed(const Duration(milliseconds: 100), () {});
+          await Future.delayed(const Duration(milliseconds: 1000), () {});
         }
         else if (char == '1') {
           TorchLight.enableTorch();
           isTorchOn = true;
-          await Future.delayed(const Duration(milliseconds: 100), () {});
+          await Future.delayed(const Duration(milliseconds: 1000), () {});
         }
     if (isTorchOn) {TorchLight.disableTorch();}
   }

@@ -180,7 +180,7 @@ public class MainActivity extends CameraActivity implements CameraBridgeViewBase
                         Toast.makeText(this, "Binary: " + binarySequence1 + "\nText: " + decodedText, Toast.LENGTH_SHORT).show();
             });
                         Imgproc.putText(rgbaFrame, "Decoded : " + decodedText, new Point(50, 700), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
-                        //binarySequence1.setLength(0);
+                        binarySequence1.setLength(0);
                     }
 
                 //Log.d(TAG, "Frame captured and processed");
