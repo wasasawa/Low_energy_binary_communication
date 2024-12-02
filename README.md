@@ -1,4 +1,4 @@
-# Pj_Indus
+# Low_energy_binary_communication
 
 Yoooooooooooooooooooooooooooooooo
 
