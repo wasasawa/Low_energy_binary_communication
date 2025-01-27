@@ -143,4 +143,40 @@ public class leddetector {
     public void clearBinarySequence() {
         binarySequence.setLength(0);
     }
+
+    public boolean detectST(Mat frame, int centerX, int centerY) {
+        // Define the ROI (Region of Interest)
+        Point center = new Point(centerX, centerY);
+        Rect roi = new Rect((int) center.x - ROI_SIZE / 2, (int) center.y - ROI_SIZE / 2, ROI_SIZE, ROI_SIZE);
+
+        // Validate ROI dimensions to avoid exceptions
+        if (roi.x < 0 || roi.y < 0 || roi.x + roi.width > frame.cols() || roi.y + roi.height > frame.rows()) {
+            isLedDetected = false;
+            return false;
+        }
+
+        Mat roiMat = new Mat(frame, roi);
+
+        // Calculate the average brightness in the ROI
+        Scalar avgBrightness = Core.mean(roiMat);
+        double brightness = avgBrightness.val[0]; // Average intensity
+
+        // Draw the ROI on the frame for visualization
+        Imgproc.rectangle(frame, roi.tl(), roi.br(), new Scalar(0, 255, 0), 2);
+
+
+        // Detect if brightness exceeds the threshold
+        if (brightness > BRIGHTNESS_THRESHOLD) {
+            isLedDetected = true;
+
+            // Log LED detection for debugging
+            Imgproc.putText(frame, "LED Detected", new Point(50, 50), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
+
+
+        } else {
+            isLedDetected = false;
+        }
+
+        return isLedDetected;
+    }
 }

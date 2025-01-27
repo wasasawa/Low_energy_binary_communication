@@ -1,116 +1,5 @@
 import 'package:torch_light/torch_light.dart';
 
-//ORIGINAL CODE NOT TO BE USED
-/*
-
-  Map morseChars = {
-    'a': '.-',
-    'b': '-...',
-    'c': '-.-.',
-    'd': '-..',
-    'e': '.',
-    'f': '..-.',
-    'g': '--.',
-    'h': '....',
-    'i': '..',
-    'j': '.---',
-    'k': '-.-',
-    'l': '.-..',
-    'm': '--',
-    'n': '-.',
-    'o': '---',
-    'p': '.--.',
-    'q': '--.-',
-    'r': '.-.',
-    's': '...',
-    't': '-',
-    'u': '..-',
-    'v': '...-',
-    'w': '.--',
-    'x': '-..-',
-    'y': '-.--',
-    'z': '--..',
-    '0': '-----',
-    '1': '.----',
-    '2': '..---',
-    '3': '...--',
-    '4': '....-',
-    '5': '.....',
-    '6': '-....',
-    '7': '--...',
-    '8': '---..',
-    '9': '----.',
-    '&': '.-...',
-    "'": '.----.',
-    '@': '.--.-.',
-    r"$": '···−··−',
-    ')': '-.--.-',
-    '(': '-.--.',
-    ':': '---...',
-    ',': '--..--',
-    ';': '−·−·−·',
-    '=': '-...-',
-    '!': '-.-.--',
-    '.': '.-.-.-',
-    '-': '-....-',
-    '_': '··−−·−',
-    '+': '.-.-.',
-    '"': '.-..-.',
-    '?': '..--..',
-    '/': '-..-.',
-  };
-
-    String textToMorse(String text) {
-    var morsedText = [];
-    // text.
-    for (var i = 0; i < text.length; i++) {
-      morseChars.forEach((key, value) {
-        if (text[i] == key) {
-          morsedText.add(value);
-        }
-        // morsedText.add(value);
-        // print(key);
-      });
-    }
-    return morsedText.join(" ");
-  }
-  void blinkMorse(String morse) async {
-    if (await TorchLight.isTorchAvailable()) {
-      for (var i = 0; i < morse.length; i++) {
-        if (morse[i] == "-") {
-          TorchLight.enableTorch();
-          await Future.delayed(const Duration(seconds: 3), () {
-            TorchLight.disableTorch();
-          });
-          // morsedText.add(value);
-          // prin1t(key);
-        } else if (morse[i] == ".") {
-          TorchLight.enableTorch();
-          await Future.delayed(const Duration(seconds: 1), () {
-            TorchLight.disableTorch();
-          });
-        }
-      }
-    }
-  }
-}
-
-
-String textToMorse(String text) {
-  var morsedText = [];
-  // text.
-  for (var i = 0; i < text.length; i++) {
-    bin.forEach((key, value) {
-      if (text[i] == key) {
-        morsedText.add(value);
-      }
-      // morsedText.add(value);
-      // print(key);
-    });
-  }
-  return morsedText.join(" ");
-}
- */
 
 class Functions {
 //Look up table for chars
@@ -243,9 +132,10 @@ class Functions {
     '|': '01111100', // VERTICAL_BAR
     '}': '01111101', // RIGHT_BRACE
     '~': '01111110', // TILDE
-    '\u007F': '01111111' // DEL
+    '\u007F': '01111111' // DEL 
 };
 
+static const int duration = 1000;
 
   String textToBinary(String text) {
   String codedText='';
@@ -256,69 +146,84 @@ class Functions {
   return codedText;
   }
 
+
+Future<void> transmitSync() async
+{
+    var isTorchOn=false;
+    String sync = "100100";
+    String char;
+    for (var i=0; i < 6; ++i)
+    {
+	char = sync[i];
+        if (char =='0') {
+          TorchLight.disableTorch();
+          isTorchOn = false;
+          await Future.delayed(const Duration(milliseconds: duration ), () {});
+        }
+        else if (char == '1') {
+          TorchLight.enableTorch();
+          isTorchOn = true;
+          await Future.delayed(const Duration(milliseconds: duration), () {});
+        }
+    }
+    
+}
+
 /*
   void transmit(String codedText) async
   {
     //TorchLight.enableTorch();
-    var isFlashOn = false;
-
-      if (codedText[0] == "0") {
-        TorchLight.disableTorch();
-        isFlashOn = false;
-        await Future.delayed(const Duration(seconds: 1), () {});
-
-      }
-      else if (codedText[0] == "1") {
-        TorchLight.enableTorch();
-        isFlashOn = true;
-        await Future.delayed(const Duration(seconds: 1), () {});
-      }
-
-      for (var i = 1; i < codedText.length; i++) {
-
-        if (codedText[i] == "0" ) {
-          TorchLight.disableTorch();
-          isFlashOn = false;
-          await Future.delayed(const Duration(seconds: 1), () {});
-        }
-        
-        else if (codedText[i] == "1") {
-          TorchLight.enableTorch();
-          isFlashOn = true;
-          await Future.delayed(const Duration(seconds: 1), () {});
-        }
-        
-      }
-    if (isFlashOn) TorchLight.disableTorch();
-
-  }
-*/
-
-void transmit(String codedText) async
-  {
-    //TorchLight.enableTorch();
     var isTorchOn = false;
+    await transmitSync();
+
     for (var i = 0; i < codedText.length; i++) {
       String char = codedText[i];
         if (char == '0') {
           TorchLight.disableTorch();
           isTorchOn = false;
-          await Future.delayed(const Duration(milliseconds: 1000), () {});
+          await Future.delayed(const Duration(milliseconds: duration), () {});
         }
         else if (char == '1') {
           TorchLight.enableTorch();
           isTorchOn = true;
-          await Future.delayed(const Duration(milliseconds: 1000), () {});
+          await Future.delayed(const Duration(milliseconds: duration), () {});
         }
     if (isTorchOn) {TorchLight.disableTorch();}
   }
 
   }
 
+*/
+
+
+void transmit(String message) async {
+    //Construct TLV encoded message with type always set to MSG ("11")
+    String type = "11"; // MSG
+    String length = ((((message.length)/8).floor())).toRadixString(2).padLeft(4, '0'); // Convert length to 4-bit binary
+
+    String codedText = type + length + message;
+
+    var isTorchOn = false;
+    await transmitSync();
+
+    print(codedText);
+
+    for (var i = 0; i < codedText.length; i++) {
+      String char = codedText[i];
+      if (char == '0') {
+        TorchLight.disableTorch();
+        isTorchOn = false;
+        await Future.delayed(const Duration(milliseconds: duration), () {});
+      } else if (char == '1') {
+        TorchLight.enableTorch();
+        isTorchOn = true;
+        await Future.delayed(const Duration(milliseconds: duration), () {});
+      }
+    }
+
+    if (isTorchOn) {
+      TorchLight.disableTorch();
+    }
+  }
 
 }
-
-
-
-
-
